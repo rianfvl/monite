@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MONITE - Sistema de Gestão</title>
+    <style>
+        :root {
+            --primary-red: #ff0000;
+            --dark-bg: #000000;
+            --card-bg: #0d0d0d;
+            --input-bg: #111111;
+            --transition-speed: 0.5s;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background-color: var(--dark-bg);
+            color: #ffffff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* TRANSIÇÃO */
+        .page-section {
+            display: none;
+            min-height: 100vh;
+            width: 100%;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding-top: 80px;
+            box-sizing: border-box;
+            opacity: 0;
+            transition: opacity var(--transition-speed) ease-in-out;
+        }
+
+        .active { display: flex; opacity: 1; }
+
+        header {
+            background-color: #050505;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1a1a1a;
+            position: fixed;
+            top: 0; width: 100%; z-index: 100;
+            box-sizing: border-box;
+        }
+
+        .logo img { height: 35px; }
+
+        .btn-dash {
+            background-color: var(--primary-red);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-servidor {
+            background-color: transparent;
+            color: var(--primary-red);
+            border: 2px solid var(--primary-red);
+            padding: 15px 30px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+
+        .btn-servidor:hover { background-color: var(--primary-red); color: white; }
+
+        /* LOGIN */
+        .login-container { width: 90%; max-width: 350px; text-align: center; }
+        .login-container img { width: 150px; margin-bottom: 20px; }
+        .login-input {
+            width: 100%; padding: 15px; margin-bottom: 12px;
+            background: var(--input-bg); border: 1px solid #222;
+            border-radius: 8px; color: white; box-sizing: border-box;
+        }
+
+        .btn-vermelho-full {
+            width: 100%; padding: 15px;
+            background: var(--primary-red); border: none;
+            border-radius: 10px; color: white;
+            font-weight: bold; cursor: pointer;
+        }
+
+        /* PAINEL XITER */
+        .xiter-card { background: var(--card-bg); border: 1px solid #1a1a1a; border-radius: 20px; padding: 25px; width: 320px; }
+        .category { background: #161616; padding: 12px; border-radius: 10px; margin-bottom: 12px; }
+        .option { display: flex; align-items: center; margin-bottom: 8px; }
+        .option input { margin-right: 12px; accent-color: var(--primary-red); }
+
+        /* GERADOR MANUAL */
+        .admin-panel { border: 2px solid var(--primary-red); padding: 30px; border-radius: 20px; width: 350px; text-align: center; }
+        .list-keys { margin-top: 15px; font-size: 11px; color: #888; max-height: 120px; overflow-y: auto; text-align: left; background: #050505; padding: 10px; border-radius: 5px; }
+        
+        select.login-input { appearance: none; cursor: pointer; color: var(--primary-red); font-weight: bold; text-align: center; }
+
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        .arrow { font-size: 50px; color: var(--primary-red); animation: bounce 1.5s infinite; }
+    </style>
+</head>
+<body>
+
+<audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3" preload="auto"></audio>
+
+<header>
+    <div class="logo"><img src="https://cdn.discordapp.com/attachments/1455438934241968198/1457148470313095334/1688.png?ex=695d95c3&is=695c4443&hm=e4b83721ac2b0837181ca7fb01c907ba8110dd856f659917e3239ff1d2710694&" alt="Logo"></div>
+    <button class="btn-dash" onclick="playSound(); changePage('loginPage')">Dashboard</button>
+</header>
+
+<section id="homePage" class="page-section active">
+    <h1 style="font-size: 2.5rem; text-align: center;">Vem pra <span style="color:red">MONITE</span></h1>
+    <div class="arrow">↓</div>
+    <a href="https://discord.gg/h458A3HM6V" class="btn-servidor" onclick="playSound()">ENTRAR NO SERVIDOR MONITE</a>
+</section>
+
+<section id="loginPage" class="page-section">
+    <div class="login-container">
+        <img src="https://cdn.discordapp.com/attachments/1455438934241968198/1457148470313095334/1688.png?ex=695d95c3&is=695c4443&hm=e4b83721ac2b0837181ca7fb01c907ba8110dd856f659917e3239ff1d2710694&" alt="Logo">
+        <input type="text" id="userLogin" class="login-input" placeholder="Username">
+        <input type="password" id="keyLogin" class="login-input" placeholder="Password / Key">
+        <button class="btn-vermelho-full" onclick="playSound(); verificarAcesso()">Login Now</button>
+        <p onclick="playSound(); changePage('homePage')" style="cursor:pointer; color:#555; margin-top:15px;">Voltar</p>
+    </div>
+</section>
+
+<section id="userPanel" class="page-section">
+    <div class="xiter-card">
+        <h2 style="margin-top:0">Painel Rian Xiter</h2>
+        <div class="category">
+            <div class="option"><input type="checkbox" checked> 120 FPS</div>
+            <div class="option"><input type="checkbox" checked> No Recoil</div>
+        </div>
+        <button class="btn-vermelho-full" onclick="playSound(); alert('Scripts Injetados!')">Injetar Scripts</button>
+        <br><br>
+        <a href="https://discord.gg/h458A3HM6V" class="btn-servidor" style="display:block; text-align:center; font-size: 12px;" onclick="playSound()">SUPORTE SERVIDOR</a>
+    </div>
+</section>
+
+<section id="masterPanel" class="page-section">
+    <div class="admin-panel">
+        <h2 style="color:red; margin-top:0;">GERADOR MANUAL</h2>
+        <p style="font-size:12px;">Crie a Key que você quiser para seus clientes:</p>
+        <input type="text" id="newUser" class="login-input" placeholder="Usuário do Cliente">
+        <input type="text" id="newKey" class="login-input" placeholder="Key do Cliente">
+        
+        <select id="keyType" class="login-input">
+            <option value="single">UM USUÁRIO (TRAVA IP)</option>
+            <option value="global">GERAL (LIBERADO)</option>
+        </select>
+
+        <button class="btn-vermelho-full" onclick="playSound(); addManualKey()">ATIVAR ACESSO</button>
+        
+        <div class="list-keys" id="listKeys">Nenhum cliente ativo.</div>
+        <br>
+        <button onclick="playSound(); changePage('loginPage')" style="background:none; border:none; color:white; cursor:pointer;">Sair</button>
+    </div>
+</section>
+
+<script>
+    // Banco de dados em memória
+    // dbUsuarios[user] = { key: '...', type: 'single/global', ip: null }
+    let dbUsuarios = {}; 
+
+    function playSound() {
+        const audio = document.getElementById('clickSound');
+        audio.volume = 1.0; // Volume Máximo
+        audio.currentTime = 0;
+        audio.play();
+    }
+
+    function changePage(pageId) {
+        const sections = document.querySelectorAll('.page-section');
+        sections.forEach(s => s.style.opacity = '0');
+        setTimeout(() => {
+            sections.forEach(s => s.classList.remove('active'));
+            const nextP = document.getElementById(pageId);
+            nextP.classList.add('active');
+            setTimeout(() => { nextP.style.opacity = '1'; }, 50);
+        }, 300); 
+    }
+
+    function verificarAcesso() {
+        const u = document.getElementById('userLogin').value;
+        const k = document.getElementById('keyLogin').value;
+
+        // LOGIN MASTER
+        if (u === "rian" && k === "123") {
+            changePage('masterPanel');
+            return;
+        } 
+
+        // LOGIN USUÁRIO
+        if (dbUsuarios[u] && dbUsuarios[u].key === k) {
+            const userData = dbUsuarios[u];
+            
+            // Simulação de IP (Usamos uma string aleatória fixa por "sessão" de navegador para teste local)
+            const currentIP = "IP_SIMULADO_USUARIO"; 
+
+            if (userData.type === "single") {
+                if (userData.ip === null) {
+                    userData.ip = currentIP; // Registra o primeiro IP
+                    alert("BEM VINDO AO PAINEL RIAN XITER");
+                    changePage('userPanel');
+                } else if (userData.ip !== currentIP) {
+                    alert("OUTRO IP FOI LOGADO"); // Bloqueia se o IP for diferente
+                } else {
+                    alert("BEM VINDO AO PAINEL RIAN XITER");
+                    changePage('userPanel');
+                }
+            } else {
+                // TIPO GERAL
+                alert("BEM VINDO AO PAINEL RIAN XITER");
+                changePage('userPanel');
+            }
+        } else {
+            alert("USUÁRIO OU KEY INCORRETOS!");
+        }
+    }
+
+    function addManualKey() {
+        const u = document.getElementById('newUser').value;
+        const k = document.getElementById('newKey').value;
+        const t = document.getElementById('keyType').value;
+
+        if (u === "" || k === "") {
+            alert("Preencha o usuário e a key!");
+            return;
+        }
+
+        dbUsuarios[u] = {
+            key: k,
+            type: t,
+            ip: null
+        };
+        
+        const list = document.getElementById('listKeys');
+        if (list.innerText === "Nenhum cliente ativo.") list.innerHTML = "";
+        const label = t === "single" ? "SINGLE (IP)" : "GERAL";
+        list.innerHTML += `<div>✅ ${u} | ${k} | [${label}]</div>`;
+        
+        document.getElementById('newUser').value = "";
+        document.getElementById('newKey').value = "";
+        alert("Acesso " + label + " ativado para " + u);
+    }
+</script>
+
+</body>
+</html>
